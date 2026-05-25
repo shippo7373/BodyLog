@@ -15,6 +15,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  scroll-behavior: smooth;
 }
 
 button,
@@ -61,22 +62,23 @@ button {
   letter-spacing: 0;
 }
 
-.user-pair {
+.header-jump-row {
   display: inline-flex;
   gap: 8px;
 }
 
-.user-pair span {
+.header-jump-row a {
   display: inline-flex;
   align-items: center;
-  min-height: 34px;
+  min-height: 42px;
   border: 1px solid color-mix(in srgb, var(--accent) 42%, #ffffff);
   border-radius: 999px;
-  padding: 6px 12px;
+  padding: 9px 16px;
   background: color-mix(in srgb, var(--accent) 12%, #ffffff);
   color: #2c2926;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 800;
+  text-decoration: none;
 }
 
 .page-pad {
@@ -110,6 +112,12 @@ button {
   width: 164px;
 }
 
+.title-actions {
+  display: grid;
+  gap: 10px;
+  justify-items: end;
+}
+
 .eyebrow {
   margin: 0;
   color: #7a7168;
@@ -124,8 +132,28 @@ button {
   gap: 18px;
 }
 
+.jump-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  width: 210px;
+}
+
+.jump-row a {
+  display: grid;
+  min-height: 46px;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--accent) 34%, #ffffff);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--accent) 12%, #ffffff);
+  color: #2c2926;
+  font-weight: 850;
+  text-decoration: none;
+}
+
 .person-log,
 .person-panel {
+  scroll-margin-top: 84px;
   border-top: 4px solid var(--accent, #4f8f8b);
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.78);
@@ -152,6 +180,39 @@ button {
   margin: 0;
   color: #2c2926;
   font-size: 20px;
+}
+
+.save-state {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  border-radius: 999px;
+  background: #f3eee7;
+  color: #6d6258;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.settings-user-list,
+.settings-section {
+  display: grid;
+  gap: 16px;
+}
+
+.settings-section {
+  padding-top: 10px;
+}
+
+.settings-user {
+  scroll-margin-top: 84px;
+}
+
+.settings-section h2 {
+  margin: 0;
+  color: #2c2926;
+  font-size: 24px;
 }
 
 .card {
@@ -198,6 +259,11 @@ textarea:focus {
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent, #4f8f8b) 16%, transparent);
 }
 
+input::placeholder,
+textarea::placeholder {
+  color: #b8afa5;
+}
+
 .chip-row {
   display: flex;
   flex-wrap: wrap;
@@ -221,10 +287,68 @@ textarea:focus {
 }
 
 .meal-grid,
+.food-column,
 .exercise-list,
 .history-list {
   display: grid;
   gap: 10px;
+}
+
+.food-columns {
+  display: grid;
+  gap: 14px;
+}
+
+.food-column {
+  align-content: start;
+  border-radius: 14px;
+  background: #faf7f2;
+  padding: 12px;
+}
+
+.food-column h3 {
+  margin: 0 0 2px;
+  color: #4b443d;
+  font-size: 15px;
+}
+
+.photo-control {
+  display: grid;
+  gap: 8px;
+}
+
+.photo-control img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.photo-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.photo-button,
+.photo-actions button {
+  display: inline-grid;
+  min-height: 38px;
+  place-items: center;
+  border: 1px solid #ddd5ca;
+  border-radius: 10px;
+  background: #fffdfa;
+  color: #5e564e;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.photo-button input {
+  display: none;
+}
+
+.photo-actions button {
+  color: #9b3d33;
 }
 
 .exercise-toggle {
@@ -249,18 +373,39 @@ textarea:focus {
   opacity: 1;
 }
 
-.exercise-toggle span {
+.exercise-toggle > button {
   display: inline-grid;
   min-height: 30px;
+  border: 0;
   place-items: center;
   border-radius: 999px;
   background: #fff;
+  color: inherit;
   font-size: 12px;
   font-weight: 850;
 }
 
 .exercise-toggle strong {
   overflow-wrap: anywhere;
+}
+
+.exercise-duration {
+  display: grid;
+  grid-template-columns: 62px auto;
+  align-items: center;
+  gap: 6px;
+}
+
+.exercise-duration input {
+  min-height: 38px;
+  padding: 8px 10px;
+  text-align: right;
+}
+
+.exercise-duration span {
+  color: #6d6258;
+  font-size: 13px;
+  font-weight: 800;
 }
 
 .memo-box {
@@ -309,13 +454,19 @@ textarea:focus {
 
 .history-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
   border: 1px solid rgba(44, 41, 38, 0.08);
   border-radius: 14px;
   background: #fff;
   padding: 14px;
+}
+
+.history-main {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
 }
 
 .history-item h2,
@@ -331,6 +482,51 @@ textarea:focus {
   color: #7a7168;
   font-size: 14px;
   font-weight: 700;
+}
+
+.history-food {
+  display: grid;
+  gap: 10px;
+}
+
+.history-food strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #4b443d;
+  font-size: 13px;
+}
+
+.history-food ul {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.history-food li {
+  color: #5e564e;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.history-food li span {
+  margin-right: 8px;
+  color: #9a9086;
+  font-weight: 800;
+}
+
+.history-photo-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.history-photo-strip img {
+  width: 62px;
+  height: 62px;
+  border-radius: 10px;
+  object-fit: cover;
 }
 
 .row-actions {
@@ -352,6 +548,39 @@ textarea:focus {
 
 .graph-card {
   height: 360px;
+}
+
+.graph-user-summary h2,
+.graph-user-summary p {
+  margin: 0;
+}
+
+.graph-user-summary h2 {
+  font-size: 28px;
+}
+
+.graph-user-summary p {
+  color: #7a7168;
+  font-weight: 700;
+}
+
+.graph-weight-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.graph-weight-row div {
+  display: grid;
+  gap: 4px;
+  justify-items: end;
+}
+
+.graph-weight-row span {
+  color: #6d6258;
+  font-size: 13px;
+  font-weight: 800;
 }
 
 .exercise-form {
@@ -411,6 +640,10 @@ textarea:focus {
   .meal-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .food-columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 560px) {
@@ -419,7 +652,16 @@ textarea:focus {
     flex-direction: column;
   }
 
+  .title-actions,
   .page-title-row input {
+    width: 100%;
+  }
+
+  .title-actions {
+    justify-items: stretch;
+  }
+
+  .jump-row {
     width: 100%;
   }
 

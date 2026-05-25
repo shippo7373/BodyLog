@@ -12,7 +12,12 @@ export const MEAL_FIELDS = [
   { key: "meal1", label: "1回目" },
   { key: "meal2", label: "2回目" },
   { key: "meal3", label: "3回目" },
-  { key: "snack1", label: "間食1" },
-  { key: "snack2", label: "間食2" },
-  { key: "snack3", label: "間食3" },
 ];
+
+export const SNACK_FIELDS = [
+  { key: "snack1", label: "1回目" },
+  { key: "snack2", label: "2回目" },
+  { key: "snack3", label: "3回目" },
+];
+
+export const FOOD_FIELDS = [...MEAL_FIELDS, ...SNACK_FIELDS];

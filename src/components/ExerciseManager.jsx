@@ -9,7 +9,7 @@ const blank = (user) => ({
   isActive: true,
 });
 
-function ExercisePanel({ user }) {
+export function ExercisePanel({ user }) {
   const [items, setItems] = useState([]);
   const [draft, setDraft] = useState(blank(user.id));
   const [editingId, setEditingId] = useState("");
@@ -62,7 +62,6 @@ function ExercisePanel({ user }) {
     <section className="person-panel stack" style={{ "--accent": user.color }}>
       <div className="person-heading">
         <p className="eyebrow">{user.label}</p>
-        <h2>Exercise</h2>
       </div>
       {error && <p className="error-message">{error}</p>}
       {message && <p className="success-message">{message}</p>}
@@ -126,13 +125,13 @@ function ExercisePanel({ user }) {
   );
 }
 
-export function ExerciseManager({ users }) {
-  return (
-    <section className="page-pad stack">
+export function ExerciseManager({ users, embedded = false }) {
+  const content = (
+    <>
       <div className="page-title-row">
         <div>
           <p className="eyebrow">nami / kaz</p>
-          <h1>Exercise</h1>
+          <h1>運動設定</h1>
         </div>
       </div>
       <div className="two-person-grid">
@@ -140,6 +139,24 @@ export function ExerciseManager({ users }) {
           <ExercisePanel key={user.id} user={user} />
         ))}
       </div>
+    </>
+  );
+
+  if (embedded) {
+    return (
+      <div className="stack">
+        <div className="two-person-grid">
+          {users.map((user) => (
+            <ExercisePanel key={user.id} user={user} />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <section className="page-pad stack">
+      {content}
     </section>
   );
 }

@@ -53,4 +53,17 @@ export const api = {
   async deleteExercise(user, id) {
     return request({ resource: "exercise", user, id }, { method: "DELETE" });
   },
+
+  async getGoal(user) {
+    const data = await request({ resource: "goal", user });
+    return data.goal;
+  },
+
+  async saveGoal(goal) {
+    const data = await request(
+      { resource: "goal" },
+      { method: "POST", body: JSON.stringify(goal) },
+    );
+    return data.goal;
+  },
 };

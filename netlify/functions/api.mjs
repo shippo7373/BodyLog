@@ -26,9 +26,11 @@ const assertUser = (user) => {
 
 const dailyKey = (user, date) => `${user}/${date}.json`;
 const exerciseKey = (user, id) => `${user}/${id}.json`;
+const goalKey = (user) => `${user}/goal.json`;
 const stores = () => ({
   daily: getStore("bodylog-daily-logs"),
   exercises: getStore("bodylog-exercise-master"),
+  goals: getStore("bodylog-goals"),
 });
 
 const readJsonList = async (store, prefix) => {
@@ -55,6 +57,7 @@ const normalizeLog = (log) => {
     weight: log.weight === "" || log.weight == null ? "" : Number(log.weight),
     weightTiming: log.weightTiming || "beforeDinner",
     meals: log.meals || {},
+    foodPhotos: log.foodPhotos || {},
     exercises: Array.isArray(log.exercises) ? log.exercises : [],
     memo: log.memo || "",
     createdAt: log.createdAt || timestamp,
@@ -74,6 +77,19 @@ const normalizeExercise = (exercise) => {
     sortOrder: Number.isFinite(Number(exercise.sortOrder)) ? Number(exercise.sortOrder) : Date.now(),
     isActive: exercise.isActive !== false,
     createdAt: exercise.createdAt || timestamp,
+    updatedAt: timestamp,
+  };
+};
+
+const normalizeGoal = (goal) => {
+  assertUser(goal.user);
+  const timestamp = now();
+  return {
+    id: `${goal.user}-goal`,
+    user: goal.user,
+    targetWeight: goal.targetWeight === "" || goal.targetWeight == null ? "" : Number(goal.targetWeight),
+    goalMemo: goal.goalMemo || "",
+    createdAt: goal.createdAt || timestamp,
     updatedAt: timestamp,
   };
 };
@@ -152,6 +168,17 @@ export default async (request) => {
         await store.exercises.setJSON(key, { ...current, isActive: false, updatedAt: now() });
       }
       return json({ ok: true });
+    }
+
+    if (resource === "goal" && request.method === "GET") {
+      assertUser(user);
+      return json({ goal: await store.goals.get(goalKey(user), { type: "json" }) });
+    }
+
+    if (resource === "goal" && request.method === "POST") {
+      const goal = normalizeGoal(await request.json());
+      await store.goals.setJSON(goalKey(goal.user), goal);
+      return json({ goal });
     }
 
     return json({ error: "Not found" }, 404);
