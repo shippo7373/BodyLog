@@ -130,7 +130,6 @@ export function ExerciseManager({ users, embedded = false }) {
     <>
       <div className="page-title-row">
         <div>
-          <p className="eyebrow">nami / kaz</p>
           <h1>運動設定</h1>
         </div>
       </div>

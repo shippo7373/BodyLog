@@ -122,7 +122,6 @@ export function HistoryView({ users, onEdit }) {
     <section className="page-pad stack">
       <div className="page-title-row">
         <div>
-          <p className="eyebrow">nami / kaz</p>
           <h1>履歴</h1>
         </div>
       </div>

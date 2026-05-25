@@ -109,7 +109,6 @@ export function GraphView({ users }) {
     <section className="page-pad stack">
       <div className="page-title-row">
         <div>
-          <p className="eyebrow">nami / kaz</p>
           <h1>体重グラフ</h1>
         </div>
       </div>

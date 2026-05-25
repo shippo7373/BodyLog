@@ -48,7 +48,6 @@ export default function App() {
           <section className="page-pad stack">
             <div className="page-title-row">
               <div>
-                <p className="eyebrow">nami / kaz</p>
                 <h1>今日の記録</h1>
               </div>
               <div className="title-actions">

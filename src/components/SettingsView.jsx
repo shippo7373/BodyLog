@@ -6,7 +6,6 @@ export function SettingsView({ users }) {
     <section className="page-pad stack">
       <div className="page-title-row">
         <div>
-          <p className="eyebrow">nami / kaz</p>
           <h1>設定</h1>
         </div>
       </div>
