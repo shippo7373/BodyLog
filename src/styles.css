@@ -134,6 +134,7 @@ button {
 
 .date-panel input {
   max-width: 100%;
+  width: 164px;
 }
 
 .eyebrow {
@@ -538,43 +539,29 @@ textarea::placeholder {
 }
 
 .history-food li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  gap: 10px;
   color: #5e564e;
   font-size: 13px;
   overflow-wrap: anywhere;
 }
 
 .history-food li span {
-  margin-right: 8px;
   color: #9a9086;
   font-weight: 800;
 }
 
-.history-photo-strip {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.history-photo-strip figure {
-  display: grid;
-  gap: 4px;
+.history-food li p {
   margin: 0;
-  width: 76px;
 }
 
-.history-photo-strip img {
-  width: 76px;
-  height: 76px;
+.history-food li img {
+  width: 58px;
+  height: 58px;
   border-radius: 10px;
   object-fit: cover;
-}
-
-.history-photo-strip figcaption {
-  color: #7a7168;
-  font-size: 11px;
-  font-weight: 800;
-  line-height: 1.25;
-  text-align: center;
 }
 
 .row-actions {
@@ -701,9 +688,15 @@ textarea::placeholder {
   }
 
   .title-actions,
-  .page-title-row input,
-  .date-panel input {
+  .page-title-row input {
     max-width: 100%;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .date-panel input {
+    display: block;
+    max-width: calc(100% - 2px);
     min-width: 0;
     width: 100%;
   }

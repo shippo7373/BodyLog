@@ -5,19 +5,14 @@ import { formatDateJa } from "../utils/date.js";
 
 const timingLabel = (value) => WEIGHT_TIMINGS.find((item) => item.value === value)?.label || "";
 
-const filledItems = (fields, values = {}) =>
-  fields
-    .map((field) => ({ ...field, value: values[field.key] || "" }))
-    .filter((field) => field.value.trim());
-
-const photoItems = (fields, values = {}) =>
+const visibleFoodItems = (fields, meals = {}, photos = {}) =>
   fields
     .map((field) => ({
       ...field,
-      group: field.key.startsWith("snack") ? "間食" : "食事",
-      value: values[field.key] || "",
+      meal: meals[field.key] || "",
+      photo: photos[field.key] || "",
     }))
-    .filter((field) => field.value);
+    .filter((field) => field.meal.trim() || field.photo);
 
 function UserHistory({ user, onEdit }) {
   const [logs, setLogs] = useState([]);
@@ -47,9 +42,8 @@ function UserHistory({ user, onEdit }) {
         {logs.map((log) => {
           const done = log.exercises?.filter((exercise) => exercise.done).length || 0;
           const total = log.exercises?.length || 0;
-          const meals = filledItems(MEAL_FIELDS, log.meals);
-          const snacks = filledItems(SNACK_FIELDS, log.meals);
-          const photos = photoItems([...MEAL_FIELDS, ...SNACK_FIELDS], log.foodPhotos);
+          const meals = visibleFoodItems(MEAL_FIELDS, log.meals, log.foodPhotos);
+          const snacks = visibleFoodItems(SNACK_FIELDS, log.meals, log.foodPhotos);
           return (
             <article className="history-item" key={log.id}>
               <div className="history-main">
@@ -66,8 +60,13 @@ function UserHistory({ user, onEdit }) {
                         <ul>
                           {meals.map((meal) => (
                             <li key={meal.key}>
-                              <span>{meal.label}</span>
-                              {meal.value}
+                              <div>
+                                <span>{meal.label}</span>
+                                {meal.meal && <p>{meal.meal}</p>}
+                              </div>
+                              {meal.photo && (
+                                <img alt={`食事 ${meal.label}の写真`} src={meal.photo} />
+                              )}
                             </li>
                           ))}
                         </ul>
@@ -79,23 +78,16 @@ function UserHistory({ user, onEdit }) {
                         <ul>
                           {snacks.map((snack) => (
                             <li key={snack.key}>
-                              <span>{snack.label}</span>
-                              {snack.value}
+                              <div>
+                                <span>{snack.label}</span>
+                                {snack.meal && <p>{snack.meal}</p>}
+                              </div>
+                              {snack.photo && (
+                                <img alt={`間食 ${snack.label}の写真`} src={snack.photo} />
+                              )}
                             </li>
                           ))}
                         </ul>
-                      </div>
-                    )}
-                    {photos.length > 0 && (
-                      <div className="history-photo-strip">
-                        {photos.map((photo) => (
-                          <figure key={photo.key}>
-                            <img alt={`${photo.group} ${photo.label}の写真`} src={photo.value} />
-                            <figcaption>
-                              {photo.group} {photo.label}
-                            </figcaption>
-                          </figure>
-                        ))}
                       </div>
                     )}
                   </div>
