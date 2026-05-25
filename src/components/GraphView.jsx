@@ -46,7 +46,7 @@ const daysBefore = (dateValue, days) => {
 
 const latestOnOrBefore = (logs, dateValue) =>
   logs
-    .filter((log) => log.weight !== "" && log.weight != null)
+    .filter((log) => log.date && log.weight !== "" && log.weight != null)
     .filter((log) => log.date <= dateValue)
     .sort((a, b) => b.date.localeCompare(a.date))[0];
 
@@ -76,7 +76,7 @@ export function GraphView({ users }) {
     const startDate = rangeStartDate(range);
     users.forEach((user) => {
       (logsByUser[user.id] || [])
-        .filter((log) => log.weight !== "" && log.weight != null)
+        .filter((log) => log.date && log.weight !== "" && log.weight != null)
         .filter((log) => filter === "all" || log.weightTiming === filter)
         .filter((log) => !startDate || log.date >= startDate)
         .forEach((log) => {
@@ -96,7 +96,7 @@ export function GraphView({ users }) {
       users.map((user) => {
         const logs = logsByUser[user.id] || [];
         const latest = logs
-          .filter((log) => log.weight !== "" && log.weight != null)
+          .filter((log) => log.date && log.weight !== "" && log.weight != null)
           .sort((a, b) => b.date.localeCompare(a.date))[0];
         const previousDay = latest ? latestOnOrBefore(logs, daysBefore(latest.date, 1)) : null;
         const previousWeek = latest ? latestOnOrBefore(logs, daysBefore(latest.date, 7)) : null;

@@ -5,12 +5,19 @@ import { formatDateJa } from "../utils/date.js";
 
 const timingLabel = (value) => WEIGHT_TIMINGS.find((item) => item.value === value)?.label || "";
 
+const textValue = (value) => {
+  if (value == null) return "";
+  return typeof value === "string" ? value : String(value);
+};
+
+const objectValue = (value) => (value && typeof value === "object" ? value : {});
+
 const visibleFoodItems = (fields, meals = {}, photos = {}) =>
   fields
     .map((field) => ({
       ...field,
-      meal: meals[field.key] || "",
-      photo: photos[field.key] || "",
+      meal: textValue(objectValue(meals)[field.key]),
+      photo: textValue(objectValue(photos)[field.key]),
     }))
     .filter((field) => field.meal.trim() || field.photo);
 
@@ -40,8 +47,9 @@ function UserHistory({ user, onEdit }) {
       {logs.length === 0 && <p className="soft-message">まだ記録がありません。</p>}
       <div className="history-list">
         {logs.map((log) => {
-          const done = log.exercises?.filter((exercise) => exercise.done).length || 0;
-          const total = log.exercises?.length || 0;
+          const exercises = Array.isArray(log.exercises) ? log.exercises : [];
+          const done = exercises.filter((exercise) => exercise.done).length;
+          const total = exercises.length;
           const meals = visibleFoodItems(MEAL_FIELDS, log.meals, log.foodPhotos);
           const snacks = visibleFoodItems(SNACK_FIELDS, log.meals, log.foodPhotos);
           return (
@@ -52,7 +60,7 @@ function UserHistory({ user, onEdit }) {
                   <span>{log.weight || "-"}kg({timingLabel(log.weightTiming)})</span>
                   <span>運動 {done} / {total}</span>
                 </div>
-                {(meals.length > 0 || snacks.length > 0 || photos.length > 0) && (
+                {(meals.length > 0 || snacks.length > 0) && (
                   <div className="history-food">
                     {meals.length > 0 && (
                       <div>

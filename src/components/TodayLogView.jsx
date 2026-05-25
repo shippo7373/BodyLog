@@ -28,7 +28,8 @@ const previousDate = (dateValue) => {
 };
 
 function mergeExercises(masters, saved = []) {
-  const savedMap = new Map(saved.map((item) => [item.exerciseId, item]));
+  const savedItems = Array.isArray(saved) ? saved : [];
+  const savedMap = new Map(savedItems.map((item) => [item.exerciseId, item]));
   return masters.map((exercise) => {
     const current = savedMap.get(exercise.id);
     return {
