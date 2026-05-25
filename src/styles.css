@@ -124,6 +124,18 @@ button {
   justify-items: end;
 }
 
+.date-panel {
+  border: 1px solid rgba(44, 41, 38, 0.08);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.78);
+  padding: 12px;
+  box-shadow: 0 18px 42px rgba(44, 41, 38, 0.08);
+}
+
+.date-panel input {
+  max-width: 100%;
+}
+
 .eyebrow {
   margin: 0;
   color: #7a7168;
@@ -689,7 +701,8 @@ textarea::placeholder {
   }
 
   .title-actions,
-  .page-title-row input {
+  .page-title-row input,
+  .date-panel input {
     max-width: 100%;
     min-width: 0;
     width: 100%;

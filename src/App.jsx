@@ -50,9 +50,9 @@ export default function App() {
               <div>
                 <h1>今日の記録</h1>
               </div>
-              <div className="title-actions">
-                <input type="date" value={activeDate} onChange={(event) => setActiveDate(event.target.value)} />
-              </div>
+            </div>
+            <div className="date-panel">
+              <input type="date" value={activeDate} onChange={(event) => setActiveDate(event.target.value)} />
             </div>
             <div className="two-person-grid">
               {USERS.map((user) => (
