@@ -1,0 +1,14 @@
+# Local Netlify folder
+.netlify
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Local logs
+*.log
+
+# Netlify local edge runtime lock
+deno.lock
