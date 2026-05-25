@@ -50,7 +50,7 @@ export function GoalPanel({ user }) {
       } finally {
         setSaving(false);
       }
-    }, 900);
+    }, 2000);
 
     return () => window.clearTimeout(saveTimer.current);
   }, [dirty, goal, user.id]);

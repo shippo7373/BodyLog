@@ -12,7 +12,11 @@ const filledItems = (fields, values = {}) =>
 
 const photoItems = (fields, values = {}) =>
   fields
-    .map((field) => ({ ...field, value: values[field.key] || "" }))
+    .map((field) => ({
+      ...field,
+      group: field.key.startsWith("snack") ? "間食" : "食事",
+      value: values[field.key] || "",
+    }))
     .filter((field) => field.value);
 
 function UserHistory({ user, onEdit }) {
@@ -50,9 +54,10 @@ function UserHistory({ user, onEdit }) {
             <article className="history-item" key={log.id}>
               <div className="history-main">
                 <h2>{formatDateJa(log.date)}</h2>
-                <p>
-                  {log.weight || "-"}kg / {timingLabel(log.weightTiming)} / 運動 {done}/{total}
-                </p>
+                <div className="history-summary">
+                  <span>{log.weight || "-"}kg({timingLabel(log.weightTiming)})</span>
+                  <span>運動 {done} / {total}</span>
+                </div>
                 {(meals.length > 0 || snacks.length > 0 || photos.length > 0) && (
                   <div className="history-food">
                     {meals.length > 0 && (
@@ -84,7 +89,12 @@ function UserHistory({ user, onEdit }) {
                     {photos.length > 0 && (
                       <div className="history-photo-strip">
                         {photos.map((photo) => (
-                          <img alt={`${photo.label}の写真`} key={photo.key} src={photo.value} />
+                          <figure key={photo.key}>
+                            <img alt={`${photo.group} ${photo.label}の写真`} src={photo.value} />
+                            <figcaption>
+                              {photo.group} {photo.label}
+                            </figcaption>
+                          </figure>
                         ))}
                       </div>
                     )}

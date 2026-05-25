@@ -122,7 +122,7 @@ export function TodayLogView({ user, date, panelId }) {
       } finally {
         setSaving(false);
       }
-    }, 900);
+    }, 2000);
 
     return () => window.clearTimeout(saveTimer.current);
   }, [date, dirty, loading, log, masters, user]);
