@@ -62,7 +62,12 @@ export function GraphView({ users }) {
   const [logsByUser, setLogsByUser] = useState({});
   const [filter, setFilter] = useState("all");
   const [range, setRange] = useState("1m");
+  const [selectedUser, setSelectedUser] = useState("all");
   const [error, setError] = useState("");
+  const visibleUsers = useMemo(
+    () => users.filter((user) => selectedUser === "all" || user.id === selectedUser),
+    [selectedUser, users],
+  );
 
   useEffect(() => {
     setError("");
@@ -74,7 +79,7 @@ export function GraphView({ users }) {
   const data = useMemo(() => {
     const rows = new Map();
     const startDate = rangeStartDate(range);
-    users.forEach((user) => {
+    visibleUsers.forEach((user) => {
       (logsByUser[user.id] || [])
         .filter((log) => log.date && log.weight !== "" && log.weight != null)
         .filter((log) => filter === "all" || log.weightTiming === filter)
@@ -89,7 +94,7 @@ export function GraphView({ users }) {
         });
     });
     return Array.from(rows.values()).sort((a, b) => a.rawDate.localeCompare(b.rawDate));
-  }, [logsByUser, filter, range, users]);
+  }, [logsByUser, filter, range, visibleUsers]);
 
   const latestByUser = useMemo(() => {
     return Object.fromEntries(
@@ -113,6 +118,25 @@ export function GraphView({ users }) {
         </div>
       </div>
       {error && <p className="error-message">{error}</p>}
+      <div className="chip-row">
+        <button
+          className={selectedUser === "all" ? "chip selected" : "chip"}
+          type="button"
+          onClick={() => setSelectedUser("all")}
+        >
+          全員
+        </button>
+        {users.map((user) => (
+          <button
+            className={selectedUser === user.id ? "chip selected" : "chip"}
+            key={user.id}
+            type="button"
+            onClick={() => setSelectedUser(user.id)}
+          >
+            {user.id === "kaz" ? "kazu" : user.label}
+          </button>
+        ))}
+      </div>
       <div className="chip-row">
         {ranges.map((item) => (
           <button
@@ -147,7 +171,7 @@ export function GraphView({ users }) {
               <XAxis dataKey="date" tickLine={false} axisLine={false} />
               <YAxis domain={["dataMin - 1", "dataMax + 1"]} tickLine={false} axisLine={false} />
               <Tooltip />
-              {users.map((user) => (
+              {visibleUsers.map((user) => (
                 <Line
                   key={user.id}
                   type="monotone"
@@ -165,7 +189,7 @@ export function GraphView({ users }) {
         )}
       </section>
       <div className="two-person-grid">
-        {users.map((user) => {
+        {visibleUsers.map((user) => {
           const summary = latestByUser[user.id];
           const latest = summary?.latest;
           return (

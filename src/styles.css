@@ -385,6 +385,10 @@ textarea::placeholder {
   opacity: 0.72;
 }
 
+.exercise-toggle.custom {
+  grid-template-columns: 48px 1fr auto auto;
+}
+
 .exercise-toggle.done {
   border-color: color-mix(in srgb, var(--accent, #4f8f8b) 45%, #ffffff);
   background: color-mix(in srgb, var(--accent, #4f8f8b) 13%, #ffffff);
@@ -425,6 +429,41 @@ textarea::placeholder {
   color: #6d6258;
   font-size: 13px;
   font-weight: 800;
+}
+
+.exercise-remove {
+  min-height: 34px;
+  border: 1px solid #ddd5ca;
+  border-radius: 10px;
+  background: #fffdfa;
+  color: #9b3d33;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.custom-exercise-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 72px 54px auto;
+  gap: 8px;
+  align-items: center;
+  border-top: 1px solid #e1dbd1;
+  padding-top: 12px;
+}
+
+.custom-exercise-form input {
+  min-height: 40px;
+  padding: 9px 10px;
+}
+
+.custom-exercise-form button {
+  min-height: 40px;
+  border: 0;
+  border-radius: 10px;
+  background: #2c2926;
+  color: #fff;
+  padding: 8px 12px;
+  font-weight: 850;
 }
 
 .memo-box {
@@ -726,5 +765,26 @@ textarea::placeholder {
 
   .form-row {
     grid-template-columns: 1fr;
+  }
+
+  .custom-exercise-form {
+    grid-template-columns: 1fr 72px 54px;
+  }
+
+  .custom-exercise-form button {
+    grid-column: 1 / -1;
+  }
+
+  .exercise-toggle.custom {
+    grid-template-columns: 48px 1fr;
+  }
+
+  .exercise-toggle.custom .exercise-duration {
+    grid-column: 1 / 2;
+  }
+
+  .exercise-toggle.custom .exercise-remove {
+    grid-column: 2 / 3;
+    justify-self: end;
   }
 }

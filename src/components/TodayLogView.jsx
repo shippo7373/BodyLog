@@ -30,7 +30,7 @@ const previousDate = (dateValue) => {
 function mergeExercises(masters, saved = []) {
   const savedItems = Array.isArray(saved) ? saved : [];
   const savedMap = new Map(savedItems.map((item) => [item.exerciseId, item]));
-  return masters.map((exercise) => {
+  const masterExercises = masters.map((exercise) => {
     const current = savedMap.get(exercise.id);
     return {
       exerciseId: exercise.id,
@@ -38,8 +38,20 @@ function mergeExercises(masters, saved = []) {
       duration: current?.duration ?? exercise.duration,
       unit: exercise.unit,
       done: Boolean(current?.done),
+      isCustom: false,
     };
   });
+  const customExercises = savedItems
+    .filter((item) => item.isCustom || !masters.some((exercise) => exercise.id === item.exerciseId))
+    .map((item) => ({
+      exerciseId: item.exerciseId || `custom-${crypto.randomUUID()}`,
+      name: item.name || "追加運動",
+      duration: item.duration ?? "",
+      unit: item.unit || "分",
+      done: item.done !== false,
+      isCustom: true,
+    }));
+  return [...masterExercises, ...customExercises];
 }
 
 const imageToDataUrl = (file) =>
@@ -73,6 +85,7 @@ export function TodayLogView({ user, date, panelId }) {
   const [dirty, setDirty] = useState(false);
   const [saving, setSaving] = useState(false);
   const [previousWeight, setPreviousWeight] = useState("");
+  const [customExercise, setCustomExercise] = useState({ name: "", duration: "", unit: "分" });
   const saveTimer = useRef(null);
 
   useEffect(() => {
@@ -178,6 +191,37 @@ export function TodayLogView({ user, date, panelId }) {
       exercises: current.exercises.map((exercise) =>
         exercise.exerciseId === exerciseId ? { ...exercise, duration } : exercise,
       ),
+    }));
+  };
+
+  const addCustomExercise = (event) => {
+    event.preventDefault();
+    const name = customExercise.name.trim();
+    if (!name) return;
+
+    setDirty(true);
+    setLog((current) => ({
+      ...current,
+      exercises: [
+        ...current.exercises,
+        {
+          exerciseId: `custom-${crypto.randomUUID()}`,
+          name,
+          duration: customExercise.duration,
+          unit: customExercise.unit.trim() || "分",
+          done: true,
+          isCustom: true,
+        },
+      ],
+    }));
+    setCustomExercise({ name: "", duration: "", unit: "分" });
+  };
+
+  const removeCustomExercise = (exerciseId) => {
+    setDirty(true);
+    setLog((current) => ({
+      ...current,
+      exercises: current.exercises.filter((exercise) => exercise.exerciseId !== exerciseId),
     }));
   };
 
@@ -300,7 +344,13 @@ export function TodayLogView({ user, date, panelId }) {
         <div className="exercise-list">
           {log.exercises.map((exercise) => (
             <div
-              className={exercise.done ? "exercise-toggle done" : "exercise-toggle"}
+              className={[
+                "exercise-toggle",
+                exercise.done ? "done" : "",
+                exercise.isCustom ? "custom" : "",
+              ]
+                .filter(Boolean)
+                .join(" ")}
               key={exercise.exerciseId}
             >
               <button type="button" onClick={() => toggleExercise(exercise.exerciseId)}>
@@ -320,9 +370,46 @@ export function TodayLogView({ user, date, panelId }) {
                 />
                 <span>{exercise.unit}</span>
               </label>
+              {exercise.isCustom && (
+                <button
+                  className="exercise-remove"
+                  type="button"
+                  onClick={() => removeCustomExercise(exercise.exerciseId)}
+                >
+                  削除
+                </button>
+              )}
             </div>
           ))}
         </div>
+        <form className="custom-exercise-form" onSubmit={addCustomExercise}>
+          <input
+            value={customExercise.name}
+            onChange={(event) =>
+              setCustomExercise((current) => ({ ...current, name: event.target.value }))
+            }
+            placeholder="今日だけの運動"
+          />
+          <input
+            inputMode="decimal"
+            min="0"
+            step="0.5"
+            type="number"
+            value={customExercise.duration}
+            onChange={(event) =>
+              setCustomExercise((current) => ({ ...current, duration: event.target.value }))
+            }
+            placeholder="10"
+          />
+          <input
+            value={customExercise.unit}
+            onChange={(event) =>
+              setCustomExercise((current) => ({ ...current, unit: event.target.value }))
+            }
+            placeholder="分"
+          />
+          <button type="submit">追加</button>
+        </form>
       </Card>
 
       <Card title="メモ">
